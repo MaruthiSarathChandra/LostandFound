@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Base64 Images</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+    .data-item{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+</style>
+</head>
+<body>
+<div id="data-container">
+    <!-- Dynamic data will be displayed here -->
+</div>
+
+<script>
+    async function getData(apiUrl) {
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                mode: 'cors', // Change to 'no-cors' if necessary, but this will limit the response
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+
+            // Assuming the data is an array of base64 images
+            return data;
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            return null;
+        }
+    }
+
+    // Fetch and display the data
+    $(document).ready(async function() {
+        const apiUrl = "http://localhost:8080/getData";  // Replace with your actual API URL
+        const resultSet = await getData(apiUrl);
+
+        if (resultSet) {
+            resultSet.forEach(item => {
+                $('#data-container').append(`
+                    <div class="data-item">
+                        <img width='100' height='50' src="data:image/jpeg;base64,${item}" />
+                    </div>
+                `);
+            });
+        }
+    });
+</script>
+</body>
+</html>

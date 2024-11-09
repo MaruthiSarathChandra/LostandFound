@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+<h1>Upload an Image</h1>
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <label for="file">Choose image to upload:</label>
+    <input type="file" id="file" name="file" oninput="unEventListener(this)"/>
+    <input type="submit" value="Upload" id ="submit" disabled/>
+</form>
+
+
+<script>
+    function unEventListener(termInput){
+        // Ensure that a file has been selected
+        if (termInput.files.length === 0) {
+            errorMessage("error");
+            return;
+        } if(termInput.value.length === 0 || termInput.value === "") {
+            errorMessage("error");
+            return;
+        }
+
+        // Extract the file from the input
+        const file = termInput.files[0];
+
+
+        // Get the file name and extract the extension
+        const fileName = file.name;
+        const indexOf = fileName.lastIndexOf('.');
+
+
+        // Extract and convert the extension to lowercase
+        const extension = fileName.substring(indexOf + 1).toLowerCase();
+
+        // Check if the extension is one of the allowed image types
+        if (extension === "jpeg" || extension === "jpg" || extension === "png") {
+            termInput.style.color = "green";
+            document.getElementById("submit").disabled = false;
+        } else {
+            // Reset the input and display an error message
+            termInput.value = '';
+            errorMessage("error");
+        }
+
+
+    function errorMessage(Type) {
+
+        if(Type === "error") {
+            termInput.style.color = "red";
+            document.getElementById("submit").disabled = true;
+        }
+    }
+    }
+</script>
+
+</body>
+</html>
